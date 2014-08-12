@@ -35,6 +35,14 @@ public class Hand {
            Console.WriteLine(card.suit + card.rank);
          }
       }
+
+    public int Score() {
+      int sum=0;
+      for (int i=0; i<this.hand.Count; i++) {
+        sum += this.hand[i].rank;
+      }
+      return sum;
+    }
   }
 
 public class Deck {
@@ -71,10 +79,22 @@ public class Deck {
     }
  }
 
+public class GameLogic {
+  public void CompareScores (int PlayerScore, int DealerScore) {
+    if (PlayerScore > 21 || DealerScore > 21) {
+      string loser = PlayerScore>21 ? "You" : "Dealer";
+      Console.WriteLine("{0} went bust! Cry moar.", loser );
+    } else {
+      Console.WriteLine("fooobaaaar");
+    }
+  }
+}
+
 
 public class Blackjack {
   static public void Main ()
   {
+    GameLogic gamelogic = new GameLogic();
     string gamestate = "new";
 
     while (gamestate != "over") {
@@ -92,6 +112,7 @@ public class Blackjack {
         Hand dealerHand = new Hand();
 
         deck1.DealHand(playerHand);
+        deck1.DealHand(dealerHand);
 
         Console.WriteLine("You were dealt: ");
         playerHand.DisplayHand();
@@ -102,6 +123,9 @@ public class Blackjack {
           deck1.DealCard(playerHand);
           Console.WriteLine("Your hand is: ");
           playerHand.DisplayHand();
+          Console.WriteLine("Your score is: ");
+          Console.WriteLine(playerHand.Score());
+          GameLogic.CompareScores(playerHand.Score(),dealerHand.Score());
         }
 
         gamestate = "over";
