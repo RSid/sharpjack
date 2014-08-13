@@ -111,6 +111,29 @@ public class GameLogic
             string winner = PlayerScore > DealerScore ? "Player" : "Dealer";
             Console.WriteLine("{0} wins!", winner);
         }
+
+        Console.WriteLine("Player score: {0}", PlayerScore);
+        Console.WriteLine("Dealer score: {0}", DealerScore);
+    }
+
+    public void DealerReacts(Deck Deck, Hand DealerHand, Hand PlayerHand, string Action)
+    {
+      if (Action == "H") {
+        Deck.DealCard(PlayerHand);
+        Console.WriteLine("Your hand is: ");
+        PlayerHand.DisplayHand();
+        Console.WriteLine("Your score is: ");
+        Console.WriteLine(PlayerHand.Score());
+
+        if (DealerHand.Score()<=17) {
+          Deck.DealHand(DealerHand);
+        }
+      }
+      else if (Action == "S") {
+        while ( DealerHand.Score()<=17) {
+          Deck.DealHand(DealerHand);
+        }
+      }
     }
 }
 
@@ -144,20 +167,17 @@ public class Blackjack
 
                 Console.WriteLine("You were dealt: ");
                 playerHand.DisplayHand();
+                Console.WriteLine("Score: " + playerHand.Score());
 
-                action = Console.ReadLine();
-
-                if (action == "H")
+                while (!(playerHand.Score() >= 21 && dealerHand.Score() >= 21) )
                 {
-                    deck1.DealCard(playerHand);
-                    Console.WriteLine("Your hand is: ");
-                    playerHand.DisplayHand();
-                    Console.WriteLine("Your score is: ");
-                    Console.WriteLine(playerHand.Score());
-                    gameLogic.CompareScores(playerHand.Score(), dealerHand.Score());
+                  action = Console.ReadLine();
+
+                  gameLogic.DealerReacts(deck1, dealerHand, playerHand, action);
                 }
 
-                gamestate = "over";
+              gameLogic.CompareScores(playerHand.Score(), dealerHand.Score());
+              gamestate = "over";
             }
         }
     }
